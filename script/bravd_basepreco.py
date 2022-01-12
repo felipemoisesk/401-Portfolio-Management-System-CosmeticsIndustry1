@@ -2,7 +2,10 @@ import pandas as pd
 import shutil
 import os
 
+# PROCESSAMENTO
+print('\n>> Iniciando PROCESSAMENTO de BASE DE PREÇOS VD BR <<\n')
 dirbaseprecobr = r"../data_input/BasePreco_VD_BR"
+
 listaarquivos = os.listdir(dirbaseprecobr)
 dadosplanilha = []
 dadoshistoricos = pd.DataFrame()
@@ -14,7 +17,41 @@ for arquivo in listaarquivos:
         dadosplanilha.append(tabela)
         dadoshistoricos = pd.concat([dadoshistoricos, tabela], axis=0, ignore_index=True)
     dadoshistoricos.to_excel("bravd_basepreco.xlsx", index=False)
-    shutil.move(r"../script/bravd_basepreco.xlsx",
-                r"../data_output/bravd_basepreco.xlsx")
-    print(f"Somando {arquivo} ao anterior, o número de linhas e colunas são, respectivamente, {dadoshistoricos.shape}")
+    print(f"{arquivo} + anterior, {dadoshistoricos.shape}.")
+shutil.move(r"../script/bravd_basepreco.xlsx",
+            r"../data_output/bravd_basepreco.xlsx")
+print('\n>> Finalizado PROCESSAMENTO de BASE DE PREÇOS VD BR <<\n')
 
+# DATACLEAN
+print('>> Iniciando DATACLEAN de BASE DE PREÇOS VD BR <<\n')
+newdirbaseprecobr = r"../data_output/bravd_basepreco.xlsx"
+newarquivo = pd.read_excel(newdirbaseprecobr)
+
+newarquivo = newarquivo[['FILE_NAME',
+                         'Status',
+                         'Código de Venda',
+                         'Descrição',
+                         'Categoria']]
+newarquivo = newarquivo.rename(columns={'Categoria': 'CATEGORIA',
+                                        'Código de Venda': 'COD_VENDA',
+                                        'Descrição': 'DESC_VENDA',
+                                        'Status': 'STATUS'})
+
+newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype(str)
+
+newarquivo["ANO_CICLO"] = newarquivo["FILE_NAME"].str[0:6]
+newarquivo["CANAL"] = 'Venda Direta'
+newarquivo["PAIS"] = 'Brasil'
+
+filtrostatus = ['Lançamento', 'Vigente', 'Vigente apenas neste ciclo']
+
+newarquivo = newarquivo.loc[newarquivo['STATUS'].isin(filtrostatus)]
+
+print('\n>> Finalizado DATACLEAN de BASE DE PREÇOS VD BR <<\n')
+
+newarquivo.to_excel("bravd_basepreco.xlsx", index=False)
+
+shutil.move(r"../script/bravd_basepreco.xlsx",
+            r"../data_output/bravd_basepreco.xlsx")
+
+print(newarquivo.info())
