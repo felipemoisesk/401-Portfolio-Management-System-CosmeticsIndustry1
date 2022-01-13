@@ -37,11 +37,21 @@ newarquivo = newarquivo.rename(columns={'Categoria': 'CATEGORIA',
                                         'Descrição': 'DESC_VENDA',
                                         'Status': 'STATUS'})
 
+newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype('int')
 newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype(str)
 
 newarquivo["ANO_CICLO"] = newarquivo["FILE_NAME"].str[0:6]
+newarquivo["ANO"] = newarquivo["ANO_CICLO"].str[0:4]
+newarquivo["CICLO"] = newarquivo["ANO_CICLO"].str[4:6]
+newarquivo["CICLO"] = newarquivo.CICLO.astype('int64')
+newarquivo["CICLO"] = newarquivo.CICLO.astype(str)
 newarquivo["CANAL"] = 'Venda Direta'
 newarquivo["PAIS"] = 'Brasil'
+newarquivo["VIGENTE"] = 'SIM'
+newarquivo["ID_PAISCICLO"] = newarquivo["PAIS"] + newarquivo["CICLO"]
+
+newarquivo["CICLO"] = newarquivo.CICLO.astype('int64')
+newarquivo["ANO"] = newarquivo.ANO.astype('int64')
 
 filtrostatus = ['Lançamento', 'Vigente', 'Vigente apenas neste ciclo']
 
