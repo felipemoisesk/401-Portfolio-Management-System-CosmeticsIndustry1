@@ -37,8 +37,7 @@ newarquivo = newarquivo.rename(columns={'Categoria': 'CATEGORIA',
                                         'Descrição': 'DESC_VENDA',
                                         'Status': 'STATUS'})
 
-newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype('int')
-newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype(str)
+#newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype(str)
 
 newarquivo["ANO_CICLO"] = newarquivo["FILE_NAME"].str[0:6]
 newarquivo["ANO"] = newarquivo["ANO_CICLO"].str[0:4]
