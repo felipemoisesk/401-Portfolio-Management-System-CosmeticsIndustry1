@@ -1,5 +1,4 @@
 import pandas as pd
-import shutil
 import os
 
 # PROCESSAMENTO
@@ -10,16 +9,12 @@ listaarquivos = os.listdir(dirbaseprecohisp)
 dadosplanilha = []
 dadoshistoricos = pd.DataFrame()
 for arquivo in listaarquivos:
-#    nomeabas = ["Planilha1"]
-#    for aba in nomeabas:
     tabela = pd.read_excel(f"{dirbaseprecohisp}/{arquivo}", header=0)
     tabela['FILE_NAME'] = os.path.basename(arquivo)
     dadosplanilha.append(tabela)
     dadoshistoricos = pd.concat([dadoshistoricos, tabela], axis=0, ignore_index=True)
-    dadoshistoricos.to_excel("hisag_basepreco.xlsx", index=False)
+    dadoshistoricos.to_excel("../data_output/hisag_basepreco.xlsx", index=False)
     print(f"{arquivo} + anterior, {dadoshistoricos.shape}.")
-shutil.move(r"../script/hisag_basepreco.xlsx",
-            r"../data_output/hisag_basepreco.xlsx")
 print('\n>> Finalizado PROCESSAMENTO de PLANEJAMENTO MERCADOLÓGICO AG HI <<\n')
 
 # DATACLEAN
@@ -41,6 +36,11 @@ newarquivo = newarquivo.rename(columns={'Categoría': 'CATEGORIA',
                                         'Ciclo': 'ANO_CICLO',
                                         'País': 'PAIS'})
 
+filtrostatus = ['Plan']
+
+newarquivo = newarquivo.loc[newarquivo['STATUS'].isin(filtrostatus)]
+
+newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype(str)
 newarquivo["ANO_CICLO"] = newarquivo.ANO_CICLO.astype(str)
 newarquivo["ANO"] = newarquivo["ANO_CICLO"].str[0:4]
 newarquivo["CICLO"] = newarquivo["ANO_CICLO"].str[4:6]
@@ -49,19 +49,16 @@ newarquivo["CICLO"] = newarquivo.CICLO.astype(str)
 newarquivo["CANAL"] = 'Agrupados'
 newarquivo["VIGENTE"] = 'SIM'
 newarquivo["ID_PAISCICLO"] = newarquivo["PAIS"] + newarquivo["CICLO"]
+newarquivo["ID_CODVENDAPAISANOCICLO"] = newarquivo["COD_VENDA"] + newarquivo["PAIS"] + newarquivo["ANO_CICLO"]
 
 newarquivo["CICLO"] = newarquivo.CICLO.astype('int64')
 newarquivo["ANO"] = newarquivo.ANO.astype('int64')
+newarquivo = newarquivo.drop_duplicates("ID_CODVENDAPAISANOCICLO")
 
-filtrostatus = ['Plan']
-
-newarquivo = newarquivo.loc[newarquivo['STATUS'].isin(filtrostatus)]
+newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype('int64')
 
 print('\n>> Finalizado DATACLEAN de PLANEJAMENTO MERCADOLÓGICO AG HI <<\n')
 
-newarquivo.to_excel("hisag_basepreco.xlsx", index=False)
-
-shutil.move(r"../script/hisag_basepreco.xlsx",
-            r"../data_output/hisag_basepreco.xlsx")
+newarquivo.to_excel("../data_output/hisag_basepreco.xlsx", index=False)
 
 print(newarquivo.info())

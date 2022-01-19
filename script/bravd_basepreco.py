@@ -1,5 +1,4 @@
 import pandas as pd
-import shutil
 import os
 
 # PROCESSAMENTO
@@ -16,10 +15,8 @@ for arquivo in listaarquivos:
         tabela['FILE_NAME'] = os.path.basename(arquivo)
         dadosplanilha.append(tabela)
         dadoshistoricos = pd.concat([dadoshistoricos, tabela], axis=0, ignore_index=True)
-    dadoshistoricos.to_excel("bravd_basepreco.xlsx", index=False)
+    dadoshistoricos.to_excel("../data_output/bravd_basepreco.xlsx", index=False)
     print(f"{arquivo} + anterior, {dadoshistoricos.shape}.")
-shutil.move(r"../script/bravd_basepreco.xlsx",
-            r"../data_output/bravd_basepreco.xlsx")
 print('\n>> Finalizado PROCESSAMENTO de BASE DE PREÇOS VD BR <<\n')
 
 # DATACLEAN
@@ -37,6 +34,10 @@ newarquivo = newarquivo.rename(columns={'Categoria': 'CATEGORIA',
                                         'Descrição': 'DESC_VENDA',
                                         'Status': 'STATUS'})
 
+filtrostatus = ['Lançamento', 'Vigente', 'Vigente apenas neste ciclo']
+
+newarquivo = newarquivo.loc[newarquivo['STATUS'].isin(filtrostatus)]
+
 newarquivo["ANO_CICLO"] = newarquivo["FILE_NAME"].str[0:6]
 newarquivo["ANO"] = newarquivo["ANO_CICLO"].str[0:4]
 newarquivo["CICLO"] = newarquivo["ANO_CICLO"].str[4:6]
@@ -46,19 +47,19 @@ newarquivo["CANAL"] = 'Venda Direta'
 newarquivo["PAIS"] = 'Brasil'
 newarquivo["VIGENTE"] = 'SIM'
 newarquivo["ID_PAISCICLO"] = newarquivo["PAIS"] + newarquivo["CICLO"]
+newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype('int64')
+newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype(str)
+newarquivo["ID_CODVENDAPAISANOCICLO"] = newarquivo["COD_VENDA"] + newarquivo["PAIS"] + newarquivo["ANO"] + newarquivo["CICLO"]
 
 newarquivo["CICLO"] = newarquivo.CICLO.astype('int64')
 newarquivo["ANO"] = newarquivo.ANO.astype('int64')
+newarquivo = newarquivo.drop_duplicates("ID_CODVENDAPAISANOCICLO")
 
-filtrostatus = ['Lançamento', 'Vigente', 'Vigente apenas neste ciclo']
+newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype('int64')
 
-newarquivo = newarquivo.loc[newarquivo['STATUS'].isin(filtrostatus)]
 
 print('\n>> Finalizado DATACLEAN de BASE DE PREÇOS VD BR <<\n')
 
-newarquivo.to_excel("bravd_basepreco.xlsx", index=False)
-
-shutil.move(r"../script/bravd_basepreco.xlsx",
-            r"../data_output/bravd_basepreco.xlsx")
+newarquivo.to_excel("../data_output/bravd_basepreco.xlsx", index=False)
 
 print(newarquivo.info())
