@@ -51,6 +51,7 @@ newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype('int64')
 newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype(str)
 newarquivo["ID_CODVENDAPAISANOCICLO"] = newarquivo["COD_VENDA"] + newarquivo["PAIS"] + newarquivo["ANO"] + newarquivo["CICLO"]
 
+
 newarquivo["CICLO"] = newarquivo.CICLO.astype('int64')
 newarquivo["ANO"] = newarquivo.ANO.astype('int64')
 newarquivo = newarquivo.drop_duplicates("ID_CODVENDAPAISANOCICLO")
