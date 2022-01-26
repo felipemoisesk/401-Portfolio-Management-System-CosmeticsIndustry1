@@ -34,9 +34,11 @@ newarquivo = newarquivo.rename(columns={'Categoria': 'CATEGORIA',
                                         'Descrição': 'DESC_VENDA',
                                         'Status': 'STATUS'})
 
-filtrostatus = ['Lançamento', 'Vigente', 'Vigente apenas neste ciclo']
+# drop filtro filtrostatus = ['Lançamento', 'Vigente', 'Vigente apenas neste ciclo']
 
-newarquivo = newarquivo.loc[newarquivo['STATUS'].isin(filtrostatus)]
+# drop newarquivo = newarquivo.loc[newarquivo['STATUS'].isin(filtrostatus)]
+
+newarquivo["CATEGORIA"] = newarquivo.dropna(subset=["CATEGORIA"], inplace=True)
 
 newarquivo["ANO_CICLO"] = newarquivo["FILE_NAME"].str[0:6]
 newarquivo["ANO"] = newarquivo["ANO_CICLO"].str[0:4]
@@ -51,13 +53,11 @@ newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype('int64')
 newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype(str)
 newarquivo["ID_CODVENDAPAISANOCICLO"] = newarquivo["COD_VENDA"] + newarquivo["PAIS"] + newarquivo["ANO"] + newarquivo["CICLO"]
 
-
 newarquivo["CICLO"] = newarquivo.CICLO.astype('int64')
 newarquivo["ANO"] = newarquivo.ANO.astype('int64')
 newarquivo = newarquivo.drop_duplicates("ID_CODVENDAPAISANOCICLO")
 
 newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype('int64')
-
 
 print('\n>> Finalizado DATACLEAN de BASE DE PREÇOS VD BR <<\n')
 
