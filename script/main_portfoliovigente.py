@@ -54,11 +54,11 @@ while i == 'S':
         newarquivo = newarquivo.drop_duplicates("ID_CODVENDAPAISANOCICLO")
         newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype('int64')
         print('\n>> Finalizado DATACLEAN de BASE DE PREÇOS VD BR <<\n')
-        newarquivo.to_excel("../data_output/bravd_basepreco.xlsx", index=False)
+        newarquivo.to_excel("../data_output/2022CC_basedpreco.xlsx", index=False)
         print(newarquivo.info())
         i = input('\nVocê deseja atualizar algum dataset?\nDigite [S] ou [N]: ').upper()
     elif x == 2:
-        # PROCESSAMENTO
+        # PROCESSAMENTO PLANEJAMENTO MERCADOLOGICO
         print('\n>> Iniciando PROCESSAMENTO de PLANEJAMENTO MERCADOLÓGICO AG HI <<\n')
         dirbaseprecohisp = r"../data_input/BasePreco_AG_HI"
         listaarquivos = os.listdir(dirbaseprecohisp)
@@ -104,14 +104,14 @@ while i == 'S':
         newarquivo = newarquivo.drop_duplicates("ID_CODVENDAPAISANOCICLO")
         newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype('int64')
         print('>> Finalizado DATACLEAN de PLANEJAMENTO MERCADOLÓGICO AG HI <<\n')
-        newarquivo.to_excel("../data_output/hisag_planmerc.xlsx", index=False)
+        newarquivo.to_excel("../data_output/2021MM_planemerca.xlsx", index=False)
         print(newarquivo.info())
         i = input('\nVocê deseja atualizar algum dataset?\nDigite [S] ou [N]: ').upper()
     elif x == 3:
         print('\n>> Iniciando PROCESSAMENTO de PORTFOLIO VIGENTE <<\n')
         ax01 =              pd.read_excel(r"../data_input/Auxiliares/AX01_cambiociclo.xlsx")
-        dirbaseprecobr =    pd.read_excel(r"../data_output/bravd_basepreco.xlsx")
-        dirbaseprecohisp =  pd.read_excel(r"../data_output/hisag_planmerc.xlsx")
+        dirbaseprecobr =    pd.read_excel(r"../data_output/2022CC_basedpreco.xlsx")
+        dirbaseprecohisp =  pd.read_excel(r"../data_output/2021MM_planemerca.xlsx")
         dfvigente = pd.concat([dirbaseprecobr, dirbaseprecohisp])
         dfvigente = pd.merge(dfvigente, ax01, how='left', on='ID_PAISCICLO')
         dfvigente = dfvigente.rename(columns={'Mês': 'MES'})
@@ -137,7 +137,7 @@ while i == 'S':
         dfvigente["ANO"] = dfvigente.ANO.astype('int64')
         dfvigente["MES"] = dfvigente.MES.astype('int64')
         print('\n>> Finalizando PROCESSAMENTO de PORTFOLIO VIGENTE <<\n')
-        dfvigente.to_excel("../data_output/2099_vigente.xlsx", index=False)
+        dfvigente.to_excel("../data_output/2022YD_skuvigente.xlsx", index=False)
         i = input('\nVocê deseja atualizar algum dataset?\nDigite [S] ou [N]: ').upper()
     else:
         print('\nOpção de atualização INVÁLIDA!')

@@ -158,33 +158,39 @@ list_missingvalues = [' -   ',
                       '-'
                       ]
 
-year_date = int(input('Qual ANO deseja atualizar?: '))
-name_file = input('Qual PAÍS deseja atualizar?: ').lower()
-chan_file = input('Qual CANAL deseja atualizar?: ').lower()
-exte_file = input('Digite a o NOME que deseja para o arquivo de saída: ').lower()
+year_date = int(input('Qual ANO [AAAA] deseja atualizar?: '))
+mounth_date = int(input('Qual MÊS [MM] deseja atualizar?: '))
+name_file = input('Qual PAÍS deseja atualizar?: ').lower().replace(' ', '')
+chan_file = input('Qual CANAL deseja atualizar?: ').lower().replace(' ', '')
+exte_file = 'perfin'
+exte_nafi = name_file[0:2]
+exte_chfi = chan_file[0:2]
 path = r'../data_input/PerformanceFinanceira/'
 path_destino = r'../data_output/'
 type_file = 'xlsx'
 
 
-def read_file(path, year_date, name_file, chan_file, type_file):
-    file = f'{path}{year_date}99_{name_file}_{chan_file}.{type_file}'
+def read_file(path, year_date, mounth_date, name_file, chan_file, type_file):
+    file = f'{path}{year_date}{mounth_date}_{name_file}_{chan_file}.{type_file}'
     df = pd.read_excel(file, na_values=list_missingvalues)
     return df
+
 
 def rename_stocks(df):
     df = df.rename(columns=dict_columns)
     return df
 
+
 def filter_stocks(df):
     df = df[df['ANO'] == year_date]
     return df
 
-def save_file(path, year_date, name_file, chan_file, type_file, path_destino, exte_file):
-    df = read_file(path, year_date, name_file, chan_file, type_file)
+
+def save_file(path, year_date, mounth_date, name_file, chan_file, type_file, path_destino, exte_file, exte_nafi, exte_chfi):
+    df = read_file(path, year_date, mounth_date, name_file, chan_file, type_file)
     df = rename_stocks(df)
     df = filter_stocks(df)
-    df.to_excel(f'{path_destino}{year_date}99_{exte_file}.{type_file}', index=False)
+    df.to_excel(f'{path_destino}{year_date}{mounth_date}_{exte_file}{exte_nafi}{exte_chfi}.{type_file}', index=False)
 
-save_file(path, year_date, name_file, chan_file, type_file, path_destino, exte_file)
 
+save_file(path, year_date, mounth_date, name_file, chan_file, type_file, path_destino, exte_file, exte_nafi, exte_chfi)
