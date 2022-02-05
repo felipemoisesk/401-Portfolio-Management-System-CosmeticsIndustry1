@@ -190,7 +190,7 @@ def save_file(path, year_date, mounth_date, name_file, chan_file, type_file, pat
     df = read_file(path, year_date, mounth_date, name_file, chan_file, type_file)
     df = rename_stocks(df)
     df = filter_stocks(df)
-    df.to_excel(f'{path_destino}{year_date}{mounth_date}_{exte_file}{exte_nafi}{exte_chfi}.{type_file}', index=False)
+    df.to_excel(f'{path_destino}{year_date}{mounth_date}_{exte_file}{exte_nafi}{exte_chfi}.{type_file}', index=False, merge_cells=False)
 
 
 save_file(path, year_date, mounth_date, name_file, chan_file, type_file, path_destino, exte_file, exte_nafi, exte_chfi)
