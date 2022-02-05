@@ -157,40 +157,71 @@ list_missingvalues = [' -   ',
                       '  -    ',
                       '-'
                       ]
+list_groupstocks = ['ANO',
+                    'MES',
+                    'CANAL',
+                    'COD_VENDA',
+                    'COD_MATERIAL',
+                    'DESC_MATERIAL',
+                    'CATEGORIA_SAP',
+                    'MARCA_SAP'
+                    ]
 
-year_date = int(input('Qual ANO [AAAA] deseja atualizar?: '))
-mounth_date = int(input('Qual MÊS [MM] deseja atualizar?: '))
-name_file = input('Qual PAÍS deseja atualizar?: ').lower().replace(' ', '')
-chan_file = input('Qual CANAL deseja atualizar?: ').lower().replace(' ', '')
-exte_file = 'perfin'
-exte_nafi = name_file[0:2]
-exte_chfi = chan_file[0:2]
-path = r'../data_input/PerformanceFinanceira/'
-path_destino = r'../data_output/'
-type_file = 'xlsx'
+print('>'*3+' PERFORMANCE FINANCEIRA UPDATE PROGRAM '+'<'*3)
+i = input('\nVocê deseja atualizar algum dataset?\nDigite [S] ou [N]: ').upper()
 
+while i == 'S':
 
-def read_file(path, year_date, mounth_date, name_file, chan_file, type_file):
-    file = f'{path}{year_date}{mounth_date}_{name_file}_{chan_file}.{type_file}'
-    df = pd.read_excel(file, na_values=list_missingvalues)
-    return df
-
-
-def rename_stocks(df):
-    df = df.rename(columns=dict_columns)
-    return df
-
-
-def filter_stocks(df):
-    df = df[df['ANO'] == year_date]
-    return df
+    year_date = int(input('Qual ANO [AAAA] deseja atualizar?: '))
+    mounth_date = int(input('Qual MÊS [MM] deseja atualizar?: '))
+    name_file = input('Qual PAÍS deseja atualizar?: ').lower().replace(' ', '')
+    chan_file = input('Qual CANAL deseja atualizar?: ').lower().replace(' ', '')
+    exte_file = 'perfin'
+    exte_nafi = name_file[0:2]
+    exte_chfi = chan_file[0:2]
+    path = r'../data_input/PerformanceFinanceira/'
+    path_destino = r'../data_output/'
+    type_file = 'xlsx'
 
 
-def save_file(path, year_date, mounth_date, name_file, chan_file, type_file, path_destino, exte_file, exte_nafi, exte_chfi):
-    df = read_file(path, year_date, mounth_date, name_file, chan_file, type_file)
-    df = rename_stocks(df)
-    df = filter_stocks(df)
-    df.to_excel(f'{path_destino}{year_date}{mounth_date}_{exte_file}{exte_nafi}{exte_chfi}.{type_file}', index=False, merge_cells=False)
+    def read_file(path, year_date, mounth_date, name_file, chan_file, type_file):
+        file = f'{path}{year_date}{mounth_date}_{name_file}_{chan_file}.{type_file}'
+        df = pd.read_excel(file, na_values=list_missingvalues)
+        return df
 
 
-save_file(path, year_date, mounth_date, name_file, chan_file, type_file, path_destino, exte_file, exte_nafi, exte_chfi)
+    def rename_stocks(df):
+        df = df.rename(columns=dict_columns)
+        return df
+
+#    def create_columns(df)
+#        IF TIVER CANAL:
+# 	        df = df
+#       ELSE:
+# 	        df['CANAL'] = os.path.basename(arquivo)
+
+
+    def filter_stocks(df):
+        df = df[df['ANO'] == year_date]
+        return df
+
+
+    def group_stocks(df):
+        df['ANO'] = df.ANO.astype(str)
+        df['MES'] = df.MES.astype(str)
+        df = df.groupby(list_groupstocks, as_index=False).sum()
+        return df
+
+
+    def save_file(path, year_date, mounth_date, name_file, chan_file, type_file, path_destino, exte_file, exte_nafi, exte_chfi):
+        df = read_file(path, year_date, mounth_date, name_file, chan_file, type_file)
+        df = rename_stocks(df)
+        df = filter_stocks(df)
+        df = group_stocks(df)
+        df.to_excel(f'{path_destino}{year_date}{mounth_date}_{exte_file}{exte_nafi}{exte_chfi}.{type_file}', index=False, merge_cells=False)
+
+
+    save_file(path, year_date, mounth_date, name_file, chan_file, type_file, path_destino, exte_file, exte_nafi, exte_chfi)
+    print('\nProcesso finalizado!\n')
+    i = input('\nVocê deseja atualizar algum dataset?\nDigite [S] ou [N]: ').upper()
+print('\nFIM')
