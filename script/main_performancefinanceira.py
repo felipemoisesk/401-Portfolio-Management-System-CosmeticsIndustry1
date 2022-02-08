@@ -52,9 +52,9 @@ dict_columns = {' Desc Material ': 'DESC_MATERIAL',
                 'Categoria ajustado': 'CATEGORIA_AJUSTADA',
                 'Categoria ajustado*': 'CATEGORIA_AJUSTADA',
                 'Categoria BR': 'CATEGORIA_AJUSTADA',
-                'Categoria de Marketi': 'CATEGORIA_AJUSTADA',
+                'Categoria de Marketi': 'CATEGORIA_MARKETING',
                 'Categoria SIPATESP - Atributo': 'CATEGORIA_SIPATESP',
-                'CATEGORIA_MARKETING': 'CATEGORIA_AJUSTADA',
+                'CATEGORIA_MARKETING': 'CATEGORIA_MARKETING',
                 'Ciclo': 'CICLO',
                 'Classif Complement': 'CLASSIF_COMPLEMENT',
                 'CMV': 'CMV',
@@ -112,7 +112,7 @@ dict_columns = {' Desc Material ': 'DESC_MATERIAL',
                 'Mês': 'MES',
                 'MÊS': 'MES',
                 'Mês*': 'MES',
-                'Negócio': 'CANAL',
+                'Negócio': 'NEGOCIO',
                 'País': 'PAIS',
                 'Presentes': 'PRESENTES',
                 'Qtde Dada': 'QTD_DADA',
@@ -157,12 +157,23 @@ list_missingvalues = [' -   ',
                       '  -    ',
                       '-'
                       ]
-list_groupstocks = ['ANO',
+list_groupstocksme = ['ANO',
                     'MES',
+                    'PAIS',
                     'CANAL',
                     'COD_VENDA',
-                    'COD_MATERIAL',
-                    'DESC_MATERIAL',
+#                    'COD_MATERIAL',
+#                    'DESC_MATERIAL',
+                    'CATEGORIA_SAP',
+                    'MARCA_SAP'
+                    ]
+list_groupstocksci = ['ANO',
+                    'CICLO',
+                    'PAIS',
+                    'CANAL',
+                    'COD_VENDA',
+#                    'COD_MATERIAL',
+#                    'DESC_MATERIAL',
                     'CATEGORIA_SAP',
                     'MARCA_SAP'
                     ]
@@ -174,8 +185,10 @@ while i == 'S':
 
     year_date = int(input('Qual ANO [AAAA] deseja atualizar?: '))
     mounth_date = int(input('Qual MÊS [MM] deseja atualizar?: '))
-    name_file = input('Qual PAÍS deseja atualizar?: ').lower().replace(' ', '')
-    chan_file = input('Qual CANAL deseja atualizar?: ').lower().replace(' ', '')
+    name_pais = input('Qual PAÍS deseja atualizar?: ')
+    name_file = name_pais.lower().replace(' ', '')
+    name_chan = input('Qual CANAL deseja atualizar?: ')
+    chan_file = name_chan.lower().replace(' ', '')
     exte_file = 'perfin'
     exte_nafi = name_file[0:2]
     exte_chfi = chan_file[0:2]
@@ -194,11 +207,19 @@ while i == 'S':
         df = df.rename(columns=dict_columns)
         return df
 
-#    def create_columns(df)
-#        IF TIVER CANAL:
-# 	        df = df
-#       ELSE:
-# 	        df['CANAL'] = os.path.basename(arquivo)
+
+    def create_columns(df):
+        if not 'PAIS' in df.columns:
+            df['PAIS'] = name_file
+        if not 'CANAL' in df.columns:
+            df['CANAL'] = name_chan
+        if not 'RB_MOEDALOCAL' in df.columns:
+            df['RB_MOEDALOCAL'] = df['RB']
+        if not 'CATEGORIA_SAP' in df.columns:
+            df['CATEGORIA_SAP'] = df['CATEGORIA_AJUSTADA']
+        if not 'MARCA_SAP' in df.columns:
+            df['MARCA_SAP'] = df['MARCA_AJUSTADA']
+        return df
 
 
     def filter_stocks(df):
@@ -207,15 +228,23 @@ while i == 'S':
 
 
     def group_stocks(df):
-        df['ANO'] = df.ANO.astype(str)
-        df['MES'] = df.MES.astype(str)
-        df = df.groupby(list_groupstocks, as_index=False).sum()
+        if 'MES' in df.columns:
+            df['PAIS'] = df.PAIS.astype(str)
+            df['ANO'] = df.ANO.astype(str)
+            df['MES'] = df.MES.astype(str)
+            df = df.groupby(list_groupstocksme, as_index=False).sum()
+        if 'CICLO' in df.columns:
+            df['PAIS'] = df.PAIS.astype(str)
+            df['ANO'] = df.ANO.astype(str)
+            df['CICLO'] = df.CICLO.astype(str)
+            df = df.groupby(list_groupstocksci, as_index=False).sum()
         return df
 
 
     def save_file(path, year_date, mounth_date, name_file, chan_file, type_file, path_destino, exte_file, exte_nafi, exte_chfi):
         df = read_file(path, year_date, mounth_date, name_file, chan_file, type_file)
         df = rename_stocks(df)
+        df = create_columns(df)
         df = filter_stocks(df)
         df = group_stocks(df)
         df.to_excel(f'{path_destino}{year_date}{mounth_date}_{exte_file}{exte_nafi}{exte_chfi}.{type_file}', index=False, merge_cells=False)
