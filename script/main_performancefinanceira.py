@@ -184,7 +184,7 @@ i = input('\nVocê deseja atualizar algum dataset?\nDigite [S] ou [N]: ').upper(
 while i == 'S':
 
     year_date = int(input('Qual ANO [AAAA] deseja atualizar?: '))
-    mounth_date = int(input('Qual MÊS [MM] deseja atualizar?: '))
+    mounth_date = str(input('Qual MÊS [MM] deseja atualizar?: '))
     name_pais = input('Qual PAÍS deseja atualizar?: ')
     name_file = name_pais.lower().replace(' ', '')
     name_chan = input('Qual CANAL deseja atualizar?: ')
@@ -210,7 +210,7 @@ while i == 'S':
 
     def create_columns(df):
         if not 'PAIS' in df.columns:
-            df['PAIS'] = name_file
+            df['PAIS'] = name_pais
         if not 'CANAL' in df.columns:
             df['CANAL'] = name_chan
         if not 'RB_MOEDALOCAL' in df.columns:
