@@ -223,7 +223,11 @@ while i == 'S':
 
 
     def filter_stocks(df):
-        df = df[df['ANO'] == year_date]
+        if 'STATUS' in df.columns:
+            df = df[df['ANO'] == year_date]
+            df = df[df['STATUS'] == 'Real']
+        else:
+            df = df[df['ANO'] == year_date]
         return df
 
 
