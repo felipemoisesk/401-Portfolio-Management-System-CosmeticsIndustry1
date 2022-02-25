@@ -39,18 +39,18 @@ while i == 'S':
         newarquivo["ANO_CICLO"] = newarquivo["FILE_NAME"].str[0:6]
         newarquivo["ANO"] = newarquivo["ANO_CICLO"].str[0:4]
         newarquivo["CICLO"] = newarquivo["ANO_CICLO"].str[4:6]
-        newarquivo["CICLO"] = newarquivo.CICLO.astype('int64')
-        newarquivo["CICLO"] = newarquivo.CICLO.astype(str)
+#        newarquivo["CICLO"] = newarquivo.CICLO.astype('int64')
+#        newarquivo["CICLO"] = newarquivo.CICLO.astype(str)
         newarquivo["CANAL"] = 'Venda Direta'
         newarquivo["PAIS"] = 'Brasil'
         newarquivo["VIGENTE"] = 'SIM'
-        newarquivo["ID_PAISCICLO"] = newarquivo["PAIS"] + newarquivo["CICLO"]
+        newarquivo["ID_PAISANOCICLO"] = newarquivo["PAIS"] + newarquivo["ANO_CICLO"]
         newarquivo["COD_VENDA"] = newarquivo["COD_VENDA"].fillna(0)
         newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype('int64')
         newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype(str)
-        newarquivo["ID_CODVENDAPAISANOCICLO"] = newarquivo["COD_VENDA"] + newarquivo["PAIS"] + newarquivo["ANO"] + newarquivo["CICLO"]
-        newarquivo["CICLO"] = newarquivo.CICLO.astype('int64')
-        newarquivo["ANO"] = newarquivo.ANO.astype('int64')
+        newarquivo["ID_CODVENDAPAISANOCICLO"] = newarquivo["COD_VENDA"] + newarquivo["PAIS"] + newarquivo["ANO_CICLO"]
+#        newarquivo["CICLO"] = newarquivo.CICLO.astype('int64')
+#        newarquivo["ANO"] = newarquivo.ANO.astype('int64')
         newarquivo = newarquivo.drop_duplicates("ID_CODVENDAPAISANOCICLO")
         newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype('int64')
         print('\n>> Finalizado DATACLEAN de BASE DE PREÇOS VD BR <<\n')
@@ -93,14 +93,14 @@ while i == 'S':
         newarquivo["ANO_CICLO"] = newarquivo.ANO_CICLO.astype(str)
         newarquivo["ANO"] = newarquivo["ANO_CICLO"].str[0:4]
         newarquivo["CICLO"] = newarquivo["ANO_CICLO"].str[4:6]
-        newarquivo["CICLO"] = newarquivo.CICLO.astype('int64')
-        newarquivo["CICLO"] = newarquivo.CICLO.astype(str)
+#        newarquivo["CICLO"] = newarquivo.CICLO.astype('int64')
+#        newarquivo["CICLO"] = newarquivo.CICLO.astype(str)
         newarquivo["CANAL"] = 'Agrupados'
         newarquivo["VIGENTE"] = 'SIM'
-        newarquivo["ID_PAISCICLO"] = newarquivo["PAIS"] + newarquivo["CICLO"]
+        newarquivo["ID_PAISANOCICLO"] = newarquivo["PAIS"] + + newarquivo["ANO_CICLO"]
         newarquivo["ID_CODVENDAPAISANOCICLO"] = newarquivo["COD_VENDA"] + newarquivo["PAIS"] + newarquivo["ANO_CICLO"]
-        newarquivo["CICLO"] = newarquivo.CICLO.astype('int64')
-        newarquivo["ANO"] = newarquivo.ANO.astype('int64')
+#        newarquivo["CICLO"] = newarquivo.CICLO.astype('int64')
+#        newarquivo["ANO"] = newarquivo.ANO.astype('int64')
         newarquivo = newarquivo.drop_duplicates("ID_CODVENDAPAISANOCICLO")
         newarquivo["COD_VENDA"] = newarquivo.COD_VENDA.astype('int64')
         print('>> Finalizado DATACLEAN de PLANEJAMENTO MERCADOLÓGICO AG HI <<\n')
@@ -113,8 +113,7 @@ while i == 'S':
         dirbaseprecobr =    pd.read_excel(r"../data_output/2022CC_basedpreco.xlsx")
         dirbaseprecohisp =  pd.read_excel(r"../data_output/2021MM_planemerca.xlsx")
         dfvigente = pd.concat([dirbaseprecobr, dirbaseprecohisp])
-        dfvigente = pd.merge(dfvigente, ax01, how='left', on='ID_PAISCICLO')
-        dfvigente = dfvigente.rename(columns={'Mês': 'MES'})
+        dfvigente = pd.merge(dfvigente, ax01, how='left', on='ID_PAISANOCICLO')
         dfvigente = dfvigente[['STATUS',
                                'COD_VENDA',
                                'DESC_VENDA',
@@ -124,18 +123,14 @@ while i == 'S':
                                'CICLO',
                                'CANAL',
                                'PAIS',
-                               'VIGENTE',
-                               'ID_PAISCICLO',
-                               'ID_CODVENDAPAISANOCICLO',
-                               'MES'
+                               'ABERTURA_VENDA_CICLOMALOTEHISPANA',
+                               'FECHAMENTO_VENDAS',
+                               'MES',
+                               'TRIMESTRE',
+                               'CAMBIO',
+                               'ID_PAISANOCICLO',
+                               'ID_PAISANOMES',
                                ]]
-        dfvigente["COD_VENDA"] = dfvigente.COD_VENDA.astype(str)
-        dfvigente["ANO"] = dfvigente.ANO.astype(str)
-        dfvigente["MES"] = dfvigente.MES.astype(str)
-        dfvigente["ID_ANOMESPAISCOD"] = dfvigente["ANO"] + dfvigente["MES"] + dfvigente["PAIS"] + dfvigente["COD_VENDA"]
-        dfvigente["COD_VENDA"] = dfvigente.COD_VENDA.astype('int64')
-        dfvigente["ANO"] = dfvigente.ANO.astype('int64')
-        dfvigente["MES"] = dfvigente.MES.astype('int64')
         print('\n>> Finalizando PROCESSAMENTO de PORTFOLIO VIGENTE <<\n')
         dfvigente.to_excel("../data_output/2022YD_skuvigente.xlsx", index=False)
         i = input('\nVocê deseja atualizar algum dataset?\nDigite [S] ou [N]: ').upper()
