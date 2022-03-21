@@ -3,15 +3,18 @@
 </h1>
 
 <h4 align="center">
-	🚧 MAR/20 até o momento 🚀 🚧
+	🚧 OUT/21 até MAR/22 🚀 🚧
 </h4>
 
 ## 💻 Sobre o projeto
 
-O Sistema de Gestão de Portfólio, ou SGP, é um sistema desenvolvido para o núcleo Portfólio & Categorias, CoE Inteligência Natura, que oferece uma visão detalhada do portfólio Natura, em nível de SKU, considerando a coleta, processamento, democratização e análise de dados para os stakeholders da empresa.
+O Sistema de Gestão de Portfólio, ou SGP, é um sistema desenvolvido para o núcleo Portfólio & Categorias, Diretoria de Inteligência de Mercado, que oferece uma visão detalhada do portfólio de varejo, em nível de SKU, considerando a coleta, processamento, democratização e análise de dados para os stakeholders da empresa.
 
-A ferramenta a seguir, contempla a fase de ETL do projeto, coletando e processando dados de diversos sistemas da empresa.
+A ferramenta a seguir, contempla a fase de ETL do projeto, coletando e processando dados de diversos sistemas da empresa, disponibilizados após a extração em arquivos .xlsx ou .csv, em sua maioria.
+
 A construção desta ferramenta reduziu o tempo de processamento em 87% em relação a solução original que fora desenvolvida em Excel pelo time anteriormente responsável, passando de +8h para menos de 1h, considerando o início processamento até a entrega final com pré-análises e ferramenta gráfica.
+
+A fim de atender as necessidades de um time marjoritariamente composto por pessoas com habilidades em negócio, foi escolhido o Microsoft SharePoint como repositório de arquivos brutos, tratados e refinados, emulando um ambiente em camadas (Bronze, Prata e Ouro) já conhecido em pipelines ETL em engenharia de dados.
 
 Como parte da análise dos dados, os painéis em Tableau e PowerBI foram disponibilizados para a equipe, incluindo modelagem de dados dimensionais em ambos.
 
@@ -22,7 +25,7 @@ O projeto traz valor e autonomia para a equipe de negócios, desde ETL até auto
 ## ⚙️ Funcionalidades
 
 - [x] **Automação de ETL**:
-  - [x] criação de datamart, localhost, em camadas Bronze, Prata e Ouro:
+  - [x] criação de datamart, localhost e Microsoft SharePoint, em camadas Bronze, Prata e Ouro:
     - bronze: dados extraídos dos sistemas em formatos TXT, XLSX e CSV
     - prata: dados tratados, limpos e organizados em arquivos tabulares 
     - ouro: dados refinados, com modelagem dimensional aplicada para entrada nas ferramentas de dataviz da empresa
@@ -43,7 +46,7 @@ O projeto traz valor e autonomia para a equipe de negócios, desde ETL até auto
 ## 🚀 Como executar a ferramenta
 
 
-Ao executar os scripts, o usuário receberá na tela de execução perguntas a respeio dos módulos que deseja atualizar.
+Ao executar os scripts, o usuário receberá na tela de execução perguntas a respeito dos módulos que deseja atualizar.
 
 Todavia, esta ferramenta é composta por três estágios:
 
@@ -74,6 +77,10 @@ As seguintes ferramentas foram usadas na construção do projeto:
 
 -   **[Tableau](https://www.tableau.com/)**
 -   **[PowerBI](https://powerbi.microsoft.com/pt-br/)**
+
+### **Repositório de Dados**
+
+-   **[Microsoft SharePoint](https://www.microsoft.com/pt-br/microsoft-365/sharepoint/collaboration)**
 
 #### **Utilitários**
 
