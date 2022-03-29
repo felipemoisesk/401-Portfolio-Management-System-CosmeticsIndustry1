@@ -1,9 +1,9 @@
 <h1 align="center">
-     <a> 401-Systeme-Gestion-Portefeuille </a>
+     <a> 401-Gestion-Portefeuille-IndustrieCosmétique</a>
 </h1>
 
 <h4 align="center">
-	🚧 OCT/21 até MAR/22 🚀 🚧
+	🚧 OCT/21 jusqu'à MAR/22 🚀 🚧
 </h4>
 
 ## 💻 À propos du projet
@@ -28,7 +28,7 @@ Le projet apporte de la valeur et de l'autonomie à l'équipe métier, de l'ETL 
   - [x] création de datamart, localhost et Microsoft SharePoint, en couches Bronze, Silver et Gold :
     - bronze : données extraites des systèmes aux formats TXT, XLSX et CSV
     - silver : données traitées, nettoyées et organisées dans des fichiers tabulaires
-    - or : données affinées, avec modélisation dimensionnelle appliquée pour l'entrée dans les outils de dataviz de l'entreprise
+    - d'or : données affinées, avec modélisation dimensionnelle appliquée pour l'entrée dans les outils de dataviz de l'entreprise
   - [x] interaction entre le script et l'utilisateur :
     - navigation entre les modules et sous-modules que vous souhaitez mettre à jour de manière interactive et didactique, au travers de questions et sélection de réponses
 
@@ -98,4 +98,4 @@ Réalisé avec ❤️ par Felipe Möises 👋🏽 [Prendre contact!](https://www
 
 ##  Versions README
 
-[Portugais 🇧🇷](./README-PT.md)  |  [Anglais 🇺🇸](./README-EN.md)
+[Portugais 🇧🇷](./README-PT.md)  |  [Anglais 🇺🇸](./README.md)
