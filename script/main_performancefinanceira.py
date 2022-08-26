@@ -1,4 +1,5 @@
 import pandas as pd
+import pyarrow as pw
 
 # setup dicionarios e listas
 dict_columns = {' Desc Material ': 'DESC_MATERIAL',
@@ -252,6 +253,7 @@ while i == 'S':
         df = filter_stocks(df)
         df = group_stocks(df)
         df.to_excel(f'{path_destino}{year_date}{mounth_date}_{exte_file}{exte_nafi}{exte_chfi}.{type_file}', index=False, merge_cells=False)
+        df.to_parquet(f'{path_destino}{year_date}{mounth_date}_{exte_file}{exte_nafi}{exte_chfi}.{type_file}', index=False, engine='pyarrow', compression='gzip')
 
 
     save_file(path, year_date, mounth_date, name_file, chan_file, type_file, path_destino, exte_file, exte_nafi, exte_chfi)
